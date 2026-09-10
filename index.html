@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>High-Key Bakes — Sweet Delights & Artisanal Treats</title>
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts: Playfair Display (headings), Caveat (script accent), Nunito Sans (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Caveat:wght@500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --blush:#FFE5EC;
+    --pink:#FFC2D1;
+    --cream:#FFF0F3;
+    --sage:#D8E2DC;
+    --sage-dark:#9CAF9A;
+    --rose:#C9184A;
+    --rose-deep:#800F2F;
+    --ink:#5C3A44;
+  }
+
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Nunito Sans', sans-serif;
+    background-color:var(--cream);
+    color:var(--ink);
+  }
+  .font-display{ font-family:'Playfair Display', serif; }
+  .font-script{ font-family:'Caveat', cursive; }
+
+  /* Soft gingham-esque backdrop, very subtle */
+  .gingham-bg{
+    background-image:
+      repeating-linear-gradient(0deg, rgba(201,24,74,0.05) 0px, rgba(201,24,74,0.05) 1px, transparent 1px, transparent 26px),
+      repeating-linear-gradient(90deg, rgba(201,24,74,0.05) 0px, rgba(201,24,74,0.05) 1px, transparent 1px, transparent 26px);
+  }
+
+  /* Scalloped edges via masked pseudo-elements, bite-shaped against the cream page bg */
+  .scallop{ position:relative; }
+  .scallop::before, .scallop::after{
+    content:'';
+    position:absolute;
+    left:0; right:0;
+    height:16px;
+    background-image: radial-gradient(circle at 11px 11px, transparent 10px, var(--cream) 10.5px);
+    background-size: 22px 22px;
+    background-repeat: repeat-x;
+    background-position: center;
+    z-index:2;
+    pointer-events:none;
+  }
+  .scallop::before{ top:-1px; }
+  .scallop::after{ bottom:-1px; transform:scaleY(-1); }
+
+  /* Thin delicate border */
+  .lace-border{
+    border:1.5px solid var(--pink);
+  }
+
+  /* Floating drift animation for hero ornaments */
+  @keyframes drift{
+    0%,100%{ transform:translateY(0) rotate(var(--r,0deg)); }
+    50%{ transform:translateY(-10px) rotate(var(--r,0deg)); }
+  }
+  .drift{ animation:drift 5s ease-in-out infinite; }
+
+  /* Card lift on hover */
+  .bake-card{
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .bake-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 22px 34px -14px rgba(201,24,74,0.28);
+  }
+
+  /* Ribbon divider */
+  .ribbon-divider{
+    height:2px;
+    background: repeating-linear-gradient(90deg, var(--rose) 0 10px, transparent 10px 18px);
+    opacity:.55;
+  }
+
+  /* Custom scrollbar accent (non-essential, low-key) */
+  ::selection{ background:var(--pink); color:var(--rose-deep); }
+
+  /* Reduced motion respect */
+  @media (prefers-reduced-motion: reduce){
+    .drift{ animation:none; }
+    .bake-card{ transition:none; }
+  }
+
+  /* Toast */
+  #toast{
+    transition: opacity .3s ease, transform .3s ease;
+  }
+</style>
+</head>
+
+<body class="gingham-bg">
+
+<!-- ============ NAVBAR ============ -->
+<header class="sticky top-0 z-40 backdrop-blur bg-[var(--cream)]/85 border-b border-[var(--pink)]/60">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+    <span class="font-display text-lg sm:text-xl tracking-wide text-[var(--rose-deep)]">High-Key Bakes</span>
+    <nav class="hidden sm:flex items-center gap-8 text-sm font-semibold text-[var(--ink)]">
+      <a href="#menu" class="hover:text-[var(--rose)] transition-colors">Menu</a>
+      <a href="#about" class="hover:text-[var(--rose)] transition-colors">Our Story</a>
+      <a href="#footer" class="hover:text-[var(--rose)] transition-colors">Visit Us</a>
+    </nav>
+    <button id="nav-cart-btn" class="flex items-center gap-2 bg-[var(--rose)] hover:bg-[var(--rose-deep)] text-white text-sm font-semibold px-4 py-2 rounded-full shadow-sm transition-colors">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="nav-cart-count">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="relative overflow-hidden px-5 sm:px-8 pt-16 pb-24 sm:pt-24 sm:pb-32 text-center">
+
+  <!-- floating bow / floral ornaments -->
+  <svg class="hidden sm:block absolute left-[6%] top-16 drift" style="--r:-8deg" width="54" height="54" viewBox="0 0 64 64" fill="none">
+    <path d="M32 30C28 20 14 18 8 26C4 32 8 40 20 38C26 37 30 34 32 30Z" fill="var(--pink)"/>
+    <path d="M32 30C36 20 50 18 56 26C60 32 56 40 44 38C38 37 34 34 32 30Z" fill="var(--pink)"/>
+    <circle cx="32" cy="30" r="5" fill="var(--rose)"/>
+  </svg>
+  <svg class="hidden sm:block absolute right-[8%] top-28 drift" style="--r:10deg" width="40" height="40" viewBox="0 0 64 64" fill="none">
+    <path d="M32 30C28 20 14 18 8 26C4 32 8 40 20 38C26 37 30 34 32 30Z" fill="var(--sage)"/>
+    <path d="M32 30C36 20 50 18 56 26C60 32 56 40 44 38C38 37 34 34 32 30Z" fill="var(--sage)"/>
+    <circle cx="32" cy="30" r="5" fill="var(--rose)"/>
+  </svg>
+  <svg class="hidden md:block absolute left-[16%] bottom-6 drift" style="--r:6deg" width="30" height="30" viewBox="0 0 24 24" fill="var(--rose)"><path d="M12 21s-7.5-4.6-10-9.3C.3 8 2.4 4 6.4 4c2.3 0 3.9 1.3 5.6 3.4C13.7 5.3 15.3 4 17.6 4c4 0 6.1 4 4.4 7.7C19.5 16.4 12 21 12 21z"/></svg>
+  <svg class="hidden md:block absolute right-[15%] bottom-10 drift" style="--r:-6deg" width="24" height="24" viewBox="0 0 24 24" fill="var(--rose)"><path d="M12 21s-7.5-4.6-10-9.3C.3 8 2.4 4 6.4 4c2.3 0 3.9 1.3 5.6 3.4C13.7 5.3 15.3 4 17.6 4c4 0 6.1 4 4.4 7.7C19.5 16.4 12 21 12 21z"/></svg>
+
+  <p class="font-script text-3xl sm:text-4xl text-[var(--rose)] mb-1">welcome to the bakery of your dreams</p>
+  <h1 class="font-display text-5xl sm:text-7xl font-semibold text-[var(--rose-deep)] tracking-wide">HIGH-KEY BAKES</h1>
+  <p class="mt-4 text-base sm:text-lg text-[var(--ink)]/80 max-w-md mx-auto">Sweet Delights &amp; Artisanal Treats</p>
+
+  <a href="#menu" class="inline-flex items-center gap-2 mt-9 bg-[var(--rose)] hover:bg-[var(--rose-deep)] text-white font-semibold px-7 py-3 rounded-full shadow-md shadow-[var(--rose)]/20 transition-colors">
+    Explore the Menu
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  </a>
+</section>
+
+<!-- ============ MENU ============ -->
+<section id="menu" class="px-5 sm:px-8 pb-20">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+      <p class="font-script text-2xl text-[var(--rose)]">handpicked, just for you</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold text-[var(--rose-deep)] mt-1">Our Menu</h2>
+    </div>
+
+    <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+  </div>
+</section>
+
+<!-- ============ ABOUT STRIP ============ -->
+<section id="about" class="px-5 sm:px-8 py-16 bg-[var(--blush)]/60 border-y border-[var(--pink)]/50">
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="font-script text-2xl text-[var(--rose)] mb-1">our story</p>
+    <h3 class="font-display text-2xl sm:text-3xl font-semibold text-[var(--rose-deep)] mb-4">Baked with a little extra sweetness</h3>
+    <p class="text-[var(--ink)]/85 leading-relaxed">
+      High-Key Bakes started in a tiny home kitchen with one mixing bowl and a big love for cheesecakes.
+      Every slice is layered by hand, every cookie is baked to order, and every cup of coffee is poured
+      with the same softness we put into everything we make. Consider this your sign to treat yourself.
+    </p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="footer" class="px-5 sm:px-8 pt-14 pb-28 sm:pb-14">
+  <div class="max-w-5xl mx-auto">
+    <div class="ribbon-divider mb-10"></div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center sm:text-left">
+      <div>
+        <span class="font-display text-xl text-[var(--rose-deep)]">High-Key Bakes</span>
+        <p class="font-script text-xl text-[var(--rose)] mt-1">sweet delights, always</p>
+        <p class="text-sm text-[var(--ink)]/70 mt-3">Small-batch cheesecakes, cookies &amp; frothy coffee — made to order, made with love.</p>
+      </div>
+      <div>
+        <h4 class="font-display text-lg text-[var(--rose-deep)] mb-2">Opening Hours</h4>
+        <p class="text-sm text-[var(--ink)]/80">Sat · 5:00 PM – 9:00 PM</p>
+      </div>
+      <div>
+        <h4 class="font-display text-lg text-[var(--rose-deep)] mb-2">Find Us</h4>
+        <p class="text-sm text-[var(--ink)]/80"><a href="tel:+919467793434" class="hover:text-[var(--rose)] transition-colors">+91 9467793434</a></p>
+        <p class="text-sm text-[var(--ink)]/80">hello@highkeybakes.com</p>
+        <p class="text-sm text-[var(--ink)]/80">Mahindra Aura, Gurugram, Haryana</p>
+      </div>
+    </div>
+    <div class="ribbon-divider mt-10 mb-4"></div>
+    <p class="text-center text-xs text-[var(--ink)]/50">© 2026 High-Key Bakes. Made with love (and a little sugar).</p>
+  </div>
+</footer>
+
+<!-- ============ STICKY CART SUMMARY ============ -->
+<button id="cart-fab" class="fixed bottom-5 right-5 z-50 flex items-center gap-2 bg-[var(--rose)] hover:bg-[var(--rose-deep)] text-white pl-4 pr-5 py-3 rounded-full shadow-xl shadow-[var(--rose-deep)]/30 transition-colors">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <span class="text-sm font-semibold">Cart · <span id="fab-count">0</span></span>
+  <span class="text-sm font-bold" id="fab-total">₹0</span>
+</button>
+
+<!-- ============ CART DRAWER ============ -->
+<div id="cart-overlay" class="fixed inset-0 bg-[var(--rose-deep)]/30 backdrop-blur-sm z-50 hidden"></div>
+<aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-96 bg-[var(--cream)] z-50 translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+  <div class="flex items-center justify-between px-6 py-5 border-b border-[var(--pink)]/60">
+    <h3 class="font-display text-xl text-[var(--rose-deep)]">Your Cart</h3>
+    <button id="cart-close" class="text-[var(--ink)]/60 hover:text-[var(--rose)] text-2xl leading-none">&times;</button>
+  </div>
+  <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 space-y-4"></div>
+  <div class="px-6 py-5 border-t border-[var(--pink)]/60">
+    <div class="flex justify-between text-sm text-[var(--ink)]/70 mb-1">
+      <span>Total</span><span id="cart-total-amt" class="font-semibold text-[var(--rose-deep)]">₹0</span>
+    </div>
+    <button class="w-full mt-3 bg-[var(--rose)] hover:bg-[var(--rose-deep)] text-white font-semibold py-3 rounded-full transition-colors">
+      Checkout
+    </button>
+  </div>
+</aside>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-[var(--rose-deep)] text-white text-sm font-semibold px-5 py-2.5 rounded-full opacity-0 pointer-events-none shadow-lg">
+  Added to cart ✿
+</div>
+
+<script>
+  // ------------------------------------------------------------------
+  // Menu data
+  // ------------------------------------------------------------------
+  const MENU = [
+    {
+      id: 'oreo-dream-cheesecake',
+      name: 'Oreo Dream Cheesecake',
+      price: 139,
+      calories: '430–500 kcal / slice',
+      desc: 'A rich Oreo biscuit crust layered with silky vanilla cheesecake, crushed Oreo cookies and an indulgent Oreo crumble, finished with a dramatic Oreo crown.',
+      emoji: '🖤'
+    },
+    {
+      id: 'biscoff-lotus-cheesecake',
+      name: 'Biscoff Lotus Cheesecake',
+      price: 159,
+      calories: '450–520 kcal / slice',
+      desc: 'Buttery Biscoff biscuit base, velvety cheesecake filling and a luxurious Lotus Biscoff spread layer, crowned with caramelised biscuit crumbs.',
+      emoji: '🍯'
+    },
+    {
+      id: 'golden-oreo-cheesecake',
+      name: 'Golden Oreo Cheesecake',
+      price: 149,
+      calories: '420–490 kcal / slice',
+      desc: 'A dreamy golden-vanilla cheesecake packed with crushed Golden Oreos, sitting on a buttery cookie crust and finished with chocolate curls and cookie crumble.',
+      emoji: '✨'
+    },
+    {
+      id: 'triple-chocolate-chunk',
+      name: 'Triple Chocolate Chunk',
+      price: 69,
+      calories: '280–350 kcal / cookie',
+      desc: 'A thick, soft-centred cookie loaded with milk, protein aata, dark chocolate chunks.',
+      emoji: '🍪'
+    },
+    {
+      id: 'frothity-froth-coffee',
+      name: 'Frothity Froth Coffee',
+      price: 89,
+      calories: '150–220 kcal / serving',
+      desc: 'Smooth, creamy and refreshingly chilled coffee blended with rich milk and a hint of sweetness, served over ice for the perfect café-style pick-me-up.',
+      emoji: '☕'
+    }
+  ];
+
+  // ------------------------------------------------------------------
+  // Cart state (in-memory, no persistence needed for a demo storefront)
+  // ------------------------------------------------------------------
+  const cart = {}; // { id: qty }
+
+  const bowIcon = `<svg width="14" height="14" viewBox="0 0 64 64" fill="none" class="inline -mt-0.5">
+      <path d="M32 30C28 20 14 18 8 26C4 32 8 40 20 38C26 37 30 34 32 30Z" fill="currentColor"/>
+      <path d="M32 30C36 20 50 18 56 26C60 32 56 40 44 38C38 37 34 34 32 30Z" fill="currentColor"/>
+      <circle cx="32" cy="30" r="5" fill="currentColor"/>
+    </svg>`;
+
+  // ------------------------------------------------------------------
+  // Render menu cards
+  // ------------------------------------------------------------------
+  const grid = document.getElementById('menu-grid');
+
+  MENU.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'bake-card scallop lace-border bg-white/90 rounded-[26px] px-6 pt-8 pb-6 shadow-md shadow-[var(--pink)]/20 flex flex-col';
+    card.innerHTML = `
+      <div class="flex items-start justify-between mb-3">
+        <span class="text-3xl">${item.emoji}</span>
+        <span class="bg-[var(--sage)] text-[var(--rose-deep)] text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+          ${item.calories}
+        </span>
+      </div>
+      <h3 class="font-display text-xl font-semibold text-[var(--rose-deep)] leading-snug">${item.name}</h3>
+      <p class="text-sm text-[var(--ink)]/75 leading-relaxed mt-2 flex-1">${item.desc}</p>
+      <div class="flex items-center justify-between mt-5">
+        <span class="font-display text-lg font-semibold text-[var(--rose)]">₹${item.price}/-</span>
+        <button data-id="${item.id}" class="add-btn flex items-center gap-1.5 bg-[var(--rose)] hover:bg-[var(--rose-deep)] text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors">
+          ${bowIcon} Add to Cart
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // ------------------------------------------------------------------
+  // Cart logic
+  // ------------------------------------------------------------------
+  const fabCount = document.getElementById('fab-count');
+  const fabTotal = document.getElementById('fab-total');
+  const navCartCount = document.getElementById('nav-cart-count');
+  const cartItemsEl = document.getElementById('cart-items');
+  const cartTotalAmt = document.getElementById('cart-total-amt');
+  const toast = document.getElementById('toast');
+
+  function money(n){ return '₹' + n.toLocaleString('en-IN'); }
+
+  function totals(){
+    let count = 0, amount = 0;
+    Object.entries(cart).forEach(([id, qty]) => {
+      const item = MENU.find(m => m.id === id);
+      count += qty;
+      amount += qty * item.price;
+    });
+    return { count, amount };
+  }
+
+  function renderCart(){
+    const { count, amount } = totals();
+    fabCount.textContent = count;
+    fabTotal.textContent = money(amount);
+    navCartCount.textContent = count;
+    cartTotalAmt.textContent = money(amount);
+
+    cartItemsEl.innerHTML = '';
+    const entries = Object.entries(cart).filter(([,qty]) => qty > 0);
+
+    if(entries.length === 0){
+      cartItemsEl.innerHTML = `<p class="text-sm text-[var(--ink)]/60 text-center mt-10 font-script text-lg">Your cart is feeling a little empty ✿</p>`;
+      return;
+    }
+
+    entries.forEach(([id, qty]) => {
+      const item = MENU.find(m => m.id === id);
+      const row = document.createElement('div');
+      row.className = 'flex items-center gap-3 bg-[var(--blush)]/50 border border-[var(--pink)]/50 rounded-2xl p-3';
+      row.innerHTML = `
+        <span class="text-2xl">${item.emoji}</span>
+        <div class="flex-1">
+          <p class="text-sm font-semibold text-[var(--rose-deep)]">${item.name}</p>
+          <p class="text-xs text-[var(--ink)]/60">${money(item.price)} each</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="qty-btn w-6 h-6 rounded-full bg-white border border-[var(--pink)] text-[var(--rose)] font-bold" data-id="${id}" data-delta="-1">−</button>
+          <span class="text-sm w-4 text-center">${qty}</span>
+          <button class="qty-btn w-6 h-6 rounded-full bg-white border border-[var(--pink)] text-[var(--rose)] font-bold" data-id="${id}" data-delta="1">+</button>
+        </div>
+      `;
+      cartItemsEl.appendChild(row);
+    });
+  }
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translate(-50%, -6px)';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translate(-50%, 0)';
+    }, 1600);
+  }
+
+  // Add to cart
+  grid.addEventListener('click', e => {
+    const btn = e.target.closest('.add-btn');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    cart[id] = (cart[id] || 0) + 1;
+    renderCart();
+    const item = MENU.find(m => m.id === id);
+    showToast(`${item.name} added ✿`);
+  });
+
+  // Qty +/- inside drawer
+  cartItemsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.qty-btn');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const delta = parseInt(btn.dataset.delta, 10);
+    cart[id] = Math.max(0, (cart[id] || 0) + delta);
+    renderCart();
+  });
+
+  // Drawer open/close
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+
+  function openCart(){
+    drawer.classList.remove('translate-x-full');
+    overlay.classList.remove('hidden');
+  }
+  function closeCart(){
+    drawer.classList.add('translate-x-full');
+    overlay.classList.add('hidden');
+  }
+
+  document.getElementById('cart-fab').addEventListener('click', openCart);
+  document.getElementById('nav-cart-btn').addEventListener('click', openCart);
+  document.getElementById('cart-close').addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+
+  renderCart();
+</script>
+
+</body>
+</html>
